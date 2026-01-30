@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Jexs x! Elite Online</title>
+    <style>
+        :root { --neon: #00ff00; --bg: #000; }
+        body { background-color: #000; color: white; font-family: 'Courier New', monospace; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+
+        /* Pantalla de Carga y Fondo */
+        #skull-container { position: absolute; width: 100%; height: 100%; top: 0; left: 0; pointer-events: none; z-index: 1; }
+        .skull { position: absolute; font-size: 24px; top: -50px; animation: fall linear infinite; opacity: 0.6; }
+        @keyframes fall {
+            0% { transform: translateY(-50px) rotate(0deg); }
+            100% { transform: translateY(100vh) rotate(360deg); }
+        }
+
+        .app-box {
+            width: 340px; height: 650px; background: rgba(0, 0, 0, 0.96);
+            border: 2px solid #222; border-radius: 40px; position: relative; 
+            display: flex; flex-direction: column; align-items: center; z-index: 5;
+            box-shadow: 0 0 40px rgba(0, 255, 0, 0.15); overflow: hidden;
+        }
+
+        /* Login */
+        #login-screen {
+            position: absolute; inset: 0; background: #000; z-index: 10;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .key-input {
+            background: #111; border: 2px solid var(--neon); color: white; padding: 15px;
+            border-radius: 12px; width: 70%; text-align: center; font-size: 18px; margin-bottom: 20px;
+        }
+        .btn-login { background: var(--neon); color: black; border: none; padding: 12px 40px; font-weight: bold; border-radius: 8px; cursor: pointer; }
+
+        /* Contenido Principal */
+        #main-app { display: none; width: 100%; height: 100%; flex-direction: column; align-items: center; }
+
+        .lang-nav { display: flex; gap: 5px; margin-top: 40px; width: 90%; }
+        .l-btn { flex: 1; background: #111; border: 1px solid #333; color: #777; padding: 10px 2px; border-radius: 8px; font-size: 10px; cursor: pointer; }
+        .l-btn.active { background: var(--neon); color: black; border-color: var(--neon); font-weight: bold; }
+
+        .logo { margin-top: 60px; font-size: 45px; font-weight: 900; text-shadow: 0 0 20px var(--neon); letter-spacing: 2px; }
+
+        .inject-btn {
+            margin-top: 50px; background: var(--neon); color: black; border: none; padding: 20px 40px;
+            font-size: 16px; font-weight: bold; border-radius: 15px; cursor: pointer; box-shadow: 0 0 20px rgba(0,255,0,0.2);
+        }
+
+        .console {
+            width: 85%; height: 130px; background: #050505; border: 1px solid #222;
+            margin-top: 30px; padding: 10px; font-size: 11px; color: var(--neon); overflow-y: auto; border-radius: 10px;
+        }
+
+        .footer { position: absolute; bottom: 35px; display: flex; gap: 10px; width: 90%; }
+        .g-btn { flex: 1; background: #111; border: 1px solid #444; color: white; padding: 15px 5px; border-radius: 10px; font-size: 9px; cursor: pointer; font-weight: bold; }
+        
+        #fileInput { display: none; }
+    </style>
+</head>
+<body>
+
+    <div id="skull-container"></div>
+
+    <div class="app-box">
+        <div id="login-screen">
+            <h1 style="color:var(--neon); margin-bottom:30px;">JEXS X!</h1>
+            <input type="password" id="key" class="key-input" placeholder="ACCESS KEY">
+            <button class="btn-login" onclick="validate()">ACCEDER</button>
+            <p id="err" style="color:red; display:none; margin-top:10px;">LLAVE INCORRECTA</p>
+        </div>
+
+        <div id="main-app">
+            <div class="lang-nav">
+                <button class="l-btn active" onclick="setL('es', this)">ESPAÑOL</button>
+                <button class="l-btn" onclick="setL('en', this)">ENGLISH</button>
+                <button class="l-btn" onclick="setL('pt', this)">PORTUGUÊS</button>
+            </div>
+
+            <div class="logo">JEXS X!</div>
+
+            <button class="inject-btn" id="i-btn" onclick="document.getElementById('fileInput').click()">INYECTAR SCRIPT</button>
+            <input type="file" id="fileInput" accept=".txt,.lua,.sh" onchange="start(this)">
+
+            <div class="console" id="log">> Esperando script...</div>
+
+            <div class="footer">
+                <button class="g-btn" id="f1" onclick="go('com.dts.freefireth')">ABRIR FREE FIRE</button>
+                <button class="g-btn" id="f2" onclick="go('com.dts.freefiremax')">ABRIR FF MAX</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const PASS = "JEXS2026";
+        const lang = {
+            es: { i: "INYECTAR SCRIPT", f1: "ABRIR FREE FIRE", f2: "ABRIR FF MAX", w: "> Esperando script..." },
+            en: { i: "INJECT SCRIPT", f1: "OPEN FREE FIRE", f2: "OPEN FF MAX", w: "> Waiting for script..." },
+            pt: { i: "INJETAR SCRIPT", f1: "ABRIR FREE FIRE", f2: "ABRIR FF MAX", w: "> Aguardando script..." }
+        };
+
+        function validate() {
+            if(document.getElementById('key').value === PASS) {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('main-app').style.display = 'flex';
+            } else {
+                document.getElementById('err').style.display = 'block';
+            }
+        }
+
+        function setL(l, b) {
+            document.querySelectorAll('.l-btn').forEach(x => x.classList.remove('active'));
+            b.classList.add('active');
+            document.getElementById('i-btn').innerText = lang[l].i;
+            document.getElementById('f1').innerText = lang[l].f1;
+            document.getElementById('f2').innerText = lang[l].f2;
+            document.getElementById('log').innerText = lang[l].w;
+        }
+
+        function go(p) { window.location.href = "intent://#Intent;scheme=android-app;package=" + p + ";end"; }
+
+        function start(input) {
+            const file = input.files[0];
+            const log = document.getElementById('log');
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const lines = e.target.result.split('\n');
+                log.innerHTML = `> Script: ${file.name}`;
+                let i = 0;
+                const t = setInterval(() => {
+                    if(i < lines.length && i < 15) {
+                        log.innerHTML += `<br>> Cargando: ${lines[i].substring(0,20)}...`;
+                        log.scrollTop = log.scrollHeight;
+                        i++;
+                    } else {
+                        clearInterval(t);
+                        log.innerHTML += `<br><b style="color:white">>>> COMPLETO <<<</b>`;
+                    }
+                }, 100);
+            };
+            reader.readAsText(file);
+        }
+
+        function skulls() {
+            for(let i=0; i<15; i++) {
+                let s = document.createElement('div');
+                s.className = 'skull'; s.innerText = '💀';
+                s.style.left = Math.random() * 100 + 'vw';
+                s.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                s.style.animationDelay = Math.random() * 5 + 's';
+                document.getElementById('skull-container').appendChild(s);
+            }
+        }
+        skulls();
+    </script>
+</body>
+</html>
