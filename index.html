@@ -1,160 +1,258 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Jexs x! Elite Online</title>
-    <style>
-        :root { --neon: #00ff00; --bg: #000; }
-        body { background-color: #000; color: white; font-family: 'Courier New', monospace; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XIT AUX馃└ PRO</title>
 
-        /* Pantalla de Carga y Fondo */
-        #skull-container { position: absolute; width: 100%; height: 100%; top: 0; left: 0; pointer-events: none; z-index: 1; }
-        .skull { position: absolute; font-size: 24px; top: -50px; animation: fall linear infinite; opacity: 0.6; }
-        @keyframes fall {
-            0% { transform: translateY(-50px) rotate(0deg); }
-            100% { transform: translateY(100vh) rotate(360deg); }
-        }
+<style>
+body{
+    margin:0;
+    overflow:hidden;
+    background:#000;
+    font-family:Arial, sans-serif;
+}
 
-        .app-box {
-            width: 340px; height: 650px; background: rgba(0, 0, 0, 0.96);
-            border: 2px solid #222; border-radius: 40px; position: relative; 
-            display: flex; flex-direction: column; align-items: center; z-index: 5;
-            box-shadow: 0 0 40px rgba(0, 255, 0, 0.15); overflow: hidden;
-        }
+/* Canvas */
+#particles{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:0;
+}
 
-        /* Login */
-        #login-screen {
-            position: absolute; inset: 0; background: #000; z-index: 10;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-        }
-        .key-input {
-            background: #111; border: 2px solid var(--neon); color: white; padding: 15px;
-            border-radius: 12px; width: 70%; text-align: center; font-size: 18px; margin-bottom: 20px;
-        }
-        .btn-login { background: var(--neon); color: black; border: none; padding: 12px 40px; font-weight: bold; border-radius: 8px; cursor: pointer; }
+/* Panel */
+.panel{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    width:380px;
+    background:#0a0f2c;
+    padding:20px;
+    border-radius:20px;
+    border:2px solid #00f0ff;
+    box-shadow:0 0 25px #00f0ff55;
+    color:white;
+    z-index:1;
+}
 
-        /* Contenido Principal */
-        #main-app { display: none; width: 100%; height: 100%; flex-direction: column; align-items: center; }
+/* Tabs */
+.tabs{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:6px;
+}
 
-        .lang-nav { display: flex; gap: 5px; margin-top: 40px; width: 90%; }
-        .l-btn { flex: 1; background: #111; border: 1px solid #333; color: #777; padding: 10px 2px; border-radius: 8px; font-size: 10px; cursor: pointer; }
-        .l-btn.active { background: var(--neon); color: black; border-color: var(--neon); font-weight: bold; }
+.tabs button{
+    padding:8px;
+    border:none;
+    border-radius:8px;
+    background:#111;
+    color:white;
+    font-size:12px;
+    cursor:pointer;
+    transition:0.3s;
+}
 
-        .logo { margin-top: 60px; font-size: 45px; font-weight: 900; text-shadow: 0 0 20px var(--neon); letter-spacing: 2px; }
+.tabs button.activo{
+    background:#00f0ff;
+    color:black;
+}
 
-        .inject-btn {
-            margin-top: 50px; background: var(--neon); color: black; border: none; padding: 20px 40px;
-            font-size: 16px; font-weight: bold; border-radius: 15px; cursor: pointer; box-shadow: 0 0 20px rgba(0,255,0,0.2);
-        }
+/* Secciones */
+.section{
+    display:none;
+    margin-top:15px;
+    font-size:13px;
+}
 
-        .console {
-            width: 85%; height: 130px; background: #050505; border: 1px solid #222;
-            margin-top: 30px; padding: 10px; font-size: 11px; color: var(--neon); overflow-y: auto; border-radius: 10px;
-        }
+.section.active{
+    display:block;
+}
 
-        .footer { position: absolute; bottom: 35px; display: flex; gap: 10px; width: 90%; }
-        .g-btn { flex: 1; background: #111; border: 1px solid #444; color: white; padding: 15px 5px; border-radius: 10px; font-size: 9px; cursor: pointer; font-weight: bold; }
-        
-        #fileInput { display: none; }
-    </style>
+.section.red{
+    border:1px solid #ff0033;
+    box-shadow:0 0 15px #ff003355 inset;
+    padding:10px;
+    border-radius:10px;
+}
+
+.section.blue{
+    border:1px solid #00f0ff;
+    box-shadow:0 0 15px #00f0ff33 inset;
+    padding:10px;
+    border-radius:10px;
+}
+
+label{
+    display:block;
+    margin:6px 0;
+    cursor:pointer;
+}
+
+/* VIP radios */
+.vip-options input{
+    margin-right:6px;
+}
+
+/* Campo avanzado */
+textarea{
+    width:100%;
+    height:70px;
+    background:#111;
+    color:#00f0ff;
+    border:1px solid #00f0ff55;
+    border-radius:8px;
+    padding:6px;
+    resize:none;
+}
+
+select{
+    width:100%;
+    margin-top:6px;
+    padding:6px;
+    background:#111;
+    color:white;
+    border-radius:6px;
+}
+
+/* Bot贸n */
+.inyector{
+    margin-top:15px;
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    background:#00f0ff;
+    font-weight:bold;
+    cursor:pointer;
+}
+</style>
 </head>
 <body>
 
-    <div id="skull-container"></div>
+<canvas id="particles"></canvas>
 
-    <div class="app-box">
-        <div id="login-screen">
-            <h1 style="color:var(--neon); margin-bottom:30px;">JEXS X!</h1>
-            <input type="password" id="key" class="key-input" placeholder="ACCESS KEY">
-            <button class="btn-login" onclick="validate()">ACCEDER</button>
-            <p id="err" style="color:red; display:none; margin-top:10px;">LLAVE INCORRECTA</p>
-        </div>
+<div class="panel">
+<h2 style="text-align:center;">XIT AUX馃└ PRO</h2>
 
-        <div id="main-app">
-            <div class="lang-nav">
-                <button class="l-btn active" onclick="setL('es', this)">ESPA脩OL</button>
-                <button class="l-btn" onclick="setL('en', this)">ENGLISH</button>
-                <button class="l-btn" onclick="setL('pt', this)">PORTUGU脢S</button>
-            </div>
+<div class="tabs">
+<button class="tabBtn activo" data-tab="xit">XITADO</button>
+<button class="tabBtn" data-tab="opti">OPTIMIZADO</button>
+<button class="tabBtn" data-tab="dominio">666 DOMINIO</button>
+<button class="tabBtn" data-tab="vip">VIP 2.0</button>
+</div>
 
-            <div class="logo">JEXS X!</div>
+<!-- XITADO -->
+<div class="section active blue" id="xit">
+<label><input type="checkbox"> HEAD SENSIX</label>
+<label><input type="checkbox"> INYECT HEAD-TRICK</label>
+<label><input type="checkbox"> NO RECOIL X2</label>
+<label><input type="checkbox"> SEGUIMIENTO A LA CABEZA</label>
+<label><input type="checkbox"> AUTO APUNTADO X</label>
+</div>
 
-            <button class="inject-btn" id="i-btn" onclick="document.getElementById('fileInput').click()">INYECTAR SCRIPT</button>
-            <input type="file" id="fileInput" accept=".txt,.lua,.sh" onchange="start(this)">
+<!-- OPTIMIZADO -->
+<div class="section blue" id="opti">
+<label><input type="checkbox"> Modo Rendimiento Extremo</label>
+<label><input type="checkbox"> Reducci贸n de Animaciones</label>
+<label><input type="checkbox"> Boost FPS Visual</label>
+<label><input type="checkbox"> Limpieza Cache Temporal</label>
+<label><input type="checkbox"> Prioridad Alta CPU</label>
+</div>
 
-            <div class="console" id="log">> Esperando script...</div>
+<!-- 666 DOMINIO -->
+<div class="section red" id="dominio">
+<label><input type="checkbox"> Modo Rojo Intenso</label>
+<label><input type="checkbox"> Preset Precisi贸n M谩xima</label>
+<label><input type="checkbox"> Estabilidad Total</label>
+<label><input type="checkbox"> Respuesta Instant谩nea</label>
+<label><input type="checkbox"> Sincronizaci贸n Ultra</label>
+</div>
 
-            <div class="footer">
-                <button class="g-btn" id="f1" onclick="go('com.dts.freefireth')">ABRIR FREE FIRE</button>
-                <button class="g-btn" id="f2" onclick="go('com.dts.freefiremax')">ABRIR FF MAX</button>
-            </div>
-        </div>
-    </div>
+<!-- VIP -->
+<div class="section blue" id="vip">
+<div class="vip-options">
+<label><input type="radio" name="zona"> CABEZA</label>
+<label><input type="radio" name="zona"> PECHO</label>
+<label><input type="radio" name="zona"> PIE</label>
+</div>
 
-    <script>
-        const PASS = "JEXS2026";
-        const lang = {
-            es: { i: "INYECTAR SCRIPT", f1: "ABRIR FREE FIRE", f2: "ABRIR FF MAX", w: "> Esperando script..." },
-            en: { i: "INJECT SCRIPT", f1: "OPEN FREE FIRE", f2: "OPEN FF MAX", w: "> Waiting for script..." },
-            pt: { i: "INJETAR SCRIPT", f1: "ABRIR FREE FIRE", f2: "ABRIR FF MAX", w: "> Aguardando script..." }
-        };
+<select>
+<option>Seleccionar tipo de texto</option>
+<option>XML</option>
+<option>JSON</option>
+<option>SETEDIT</option>
+<option>COMBINADO</option>
+</select>
 
-        function validate() {
-            if(document.getElementById('key').value === PASS) {
-                document.getElementById('login-screen').style.display = 'none';
-                document.getElementById('main-app').style.display = 'flex';
-            } else {
-                document.getElementById('err').style.display = 'block';
-            }
-        }
+<textarea placeholder="Agrega tu texto o código aquí..."></textarea>
+</div>
 
-        function setL(l, b) {
-            document.querySelectorAll('.l-btn').forEach(x => x.classList.remove('active'));
-            b.classList.add('active');
-            document.getElementById('i-btn').innerText = lang[l].i;
-            document.getElementById('f1').innerText = lang[l].f1;
-            document.getElementById('f2').innerText = lang[l].f2;
-            document.getElementById('log').innerText = lang[l].w;
-        }
+<button class="inyector" onclick="abrirFreeFire()">INYECTADOR XIT 馃殌</button>
 
-        function go(p) { window.location.href = "intent://#Intent;scheme=android-app;package=" + p + ";end"; }
+</div>
 
-        function start(input) {
-            const file = input.files[0];
-            const log = document.getElementById('log');
-            if(!file) return;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const lines = e.target.result.split('\n');
-                log.innerHTML = `> Script: ${file.name}`;
-                let i = 0;
-                const t = setInterval(() => {
-                    if(i < lines.length && i < 15) {
-                        log.innerHTML += `<br>> Cargando: ${lines[i].substring(0,20)}...`;
-                        log.scrollTop = log.scrollHeight;
-                        i++;
-                    } else {
-                        clearInterval(t);
-                        log.innerHTML += `<br><b style="color:white">>>> COMPLETO <<<</b>`;
-                    }
-                }, 100);
-            };
-            reader.readAsText(file);
-        }
+<script>
+// Tabs
+document.querySelectorAll(".tabBtn").forEach(btn=>{
+btn.addEventListener("click",()=>{
+document.querySelectorAll(".tabBtn").forEach(b=>b.classList.remove("activo"));
+document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+btn.classList.add("activo");
+document.getElementById(btn.dataset.tab).classList.add("active");
+});
+});
 
-        function skulls() {
-            for(let i=0; i<15; i++) {
-                let s = document.createElement('div');
-                s.className = 'skull'; s.innerText = '馃拃';
-                s.style.left = Math.random() * 100 + 'vw';
-                s.style.animationDuration = (Math.random() * 3 + 2) + 's';
-                s.style.animationDelay = Math.random() * 5 + 's';
-                document.getElementById('skull-container').appendChild(s);
-            }
-        }
-        skulls();
-    </script>
+// Abrir Free Fire
+function abrirFreeFire(){
+const freeFireUri = 'freefireth://';
+window.location.href = freeFireUri;
+}
+
+// Fondo part铆culas
+const canvas = document.getElementById("particles");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+for(let i=0;i<100;i++){
+particles.push({
+x:Math.random()*canvas.width,
+y:Math.random()*canvas.height*0.6,
+size:Math.random()*2+1,
+speed:Math.random()*1.5+0.5,
+drift:(Math.random()-0.5)*0.3
+});
+}
+
+function animate(){
+ctx.clearRect(0,0,canvas.width,canvas.height);
+particles.forEach(p=>{
+ctx.fillStyle="rgba(0,240,255,0.8)";
+ctx.beginPath();
+ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+ctx.fill();
+p.y+=p.speed;
+p.x+=p.drift;
+if(p.y>canvas.height){
+p.y=Math.random()*canvas.height*0.2;
+p.x=Math.random()*canvas.width;
+}
+});
+requestAnimationFrame(animate);
+}
+animate();
+
+window.addEventListener("resize",()=>{
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+});
+</script>
+
 </body>
-              </html>
-              
+</html>
